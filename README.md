@@ -166,7 +166,7 @@ A: 理论上支持 Windows 7/8/10/11 以及 Windows Server 等所有主流 Windo
 
 如有问题或建议，欢迎通过以下方式联系：
 
-- **GitHub Issues**: (https://github.com/Xiongzecheng338/AutoShutdown/))
+- **GitHub Issues**: (https://github.com/badhope/AutoShutdown/))
 - **Email**:x18825407105@outlook.com
 
 ---
@@ -319,7 +319,7 @@ This means you are free to use, copy, modify, merge, publish, distribute, sublic
 
 For questions or suggestions, feel free to contact through the following methods:
 
-- **GitHub Issues**:(https://github.com/Xiongzecheng338/AutoShutdown/)
+- **GitHub Issues**:(https://github.com/badhope /AutoShutdown/)
 - **Email**:x18825407105@outlook.com
 
 ---
