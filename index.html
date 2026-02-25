@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Windows 自动化开关机程序教程</title>
+<title>Windows 自动化开关机程序 - 增强版</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
@@ -33,22 +33,43 @@ tailwind.config = {
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-body { font-family: 'Inter', sans-serif; }
+/* 基础设置 */
+body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
 .code-font { font-family: 'JetBrains Mono', monospace; }
+
+/* 深色模式 (默认) */
+.dark-mode { background-color: #0d1117; color: #e6edf3; }
+.dark-mode .card-surface { background-color: #161b22; border-color: #30363d; }
+.dark-mode .input-bg { background-color: #0d1117; border-color: #30363d; color: white; }
+
+/* 浅色模式 */
+.light-mode { background-color: #f6f8fa; color: #1f2328; }
+.light-mode .card-surface { background-color: #ffffff; border-color: #d0d7de; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.light-mode .input-bg { background-color: #f6f8fa; border-color: #d0d7de; color: #1f2328; }
+.light-mode nav { background-color: rgba(255,255,255,0.9); border-color: #d0d7de; }
+.light-mode .text-gray-400 { color: #656d76; }
+.light-mode .text-white { color: #1f2328; }
+.light-mode footer { background-color: #ffffff; border-top: 1px solid #d0d7de; }
+.light-mode .terminal-window { border: 1px solid #d0d7de; background: #f6f8fa; }
+
+/* 通用样式 */
 .glow-green { text-shadow: 0 0 20px rgba(63, 185, 80, 0.5); }
 .glow-cyan { text-shadow: 0 0 20px rgba(88, 166, 255, 0.5); }
-.code-block {
+
+.code-block, .terminal-window {
   background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
   border: 1px solid #30363d;
 }
-.terminal-window {
-  background: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
-}
+
 .feature-card {
-  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9) 0%, rgba(13, 17, 23, 0.95) 100%);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(48, 54, 61, 0.6);
+  transition: all 0.3s ease;
 }
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
 .step-indicator {
   background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
 }
@@ -65,11 +86,13 @@ body { font-family: 'Inter', sans-serif; }
   transition: width 0.3s ease;
 }
 .nav-link:hover::after { width: 100%; }
+
 @keyframes pulse-glow {
   0%, 100% { box-shadow: 0 0 20px rgba(63, 185, 80, 0.3); }
   50% { box-shadow: 0 0 40px rgba(63, 185, 80, 0.6); }
 }
 .pulse-animation { animation: pulse-glow 2s ease-in-out infinite; }
+
 @keyframes typing {
   from { width: 0; }
   to { width: 100%; }
@@ -77,581 +100,516 @@ body { font-family: 'Inter', sans-serif; }
 .typing-effect {
   overflow: hidden;
   white-space: nowrap;
-  animation: typing 2s steps(40) forwards;
+  border-right: 2px solid #3fb950;
+  animation: typing 3s steps(60) forwards, blink-caret 0.75s step-end infinite;
 }
+@keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: #3fb950; } }
+
+/* 滚动条 */
 .scroll-smooth { scroll-behavior: smooth; }
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: #0d1117; }
 ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+/* 移动端菜单动画 */
+.mobile-menu-enter { animation: slideIn 0.3s ease forwards; }
+@keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+/* 自定义表单样式 */
+select, input {
+  transition: all 0.2s;
+}
+select:focus, input:focus {
+  outline: none;
+  border-color: #58a6ff !important;
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
+}
 </style>
 </head>
-<body class="bg-terminal-bg text-gray-200 scroll-smooth">
+<body class="dark-mode scroll-smooth">
+
 <!-- Navigation -->
-<nav class="fixed top-0 left-0 right-0 z-50 bg-terminal-bg/90 backdrop-blur-md border-b border-terminal-border">
+<nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-terminal-border dark:bg-terminal-bg/90 light:bg-white/90">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-terminal-green to-terminal-cyan flex items-center justify-center">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-terminal-green to-terminal-cyan flex items-center justify-center shadow-lg">
           <i class="fas fa-terminal text-white text-lg"></i>
         </div>
-        <span class="text-xl font-semibold">AutoShutdown</span>
-        <span class="px-2 py-0.5 text-xs rounded-full bg-terminal-green/20 text-terminal-green border border-terminal-green/30">v2.0</span>
+        <div class="flex items-center gap-2">
+            <span class="text-xl font-semibold text-white dark:text-white">AutoShutdown</span>
+            <span class="px-2 py-0.5 text-xs rounded-full bg-terminal-green/20 text-terminal-green border border-terminal-green/30 hidden sm:inline">v2.5</span>
+        </div>
       </div>
-      <div class="hidden md:flex items-center gap-8">
-        <a href="#features" class="nav-link text-gray-400 hover:text-white transition-colors">功能特性</a>
-        <a href="#tutorial" class="nav-link text-gray-400 hover:text-white transition-colors">使用教程</a>
-        <a href="#code" class="nav-link text-gray-400 hover:text-white transition-colors">完整代码</a>
-        <a href="#faq" class="nav-link text-gray-400 hover:text-white transition-colors">常见问题</a>
-        <a href="https://github.com" target="_blank" class="px-4 py-2 rounded-lg bg-terminal-green text-white font-medium hover:bg-terminal-green/80 transition-all">
-          <i class="fab fa-github mr-2"></i>GitHub
-        </a>
+      
+      <div class="hidden md:flex items-center gap-6">
+        <a href="#generator" class="nav-link text-gray-400 hover:text-white transition-colors text-sm">在线生成</a>
+        <a href="#features" class="nav-link text-gray-400 hover:text-white transition-colors text-sm">功能详解</a>
+        <a href="#scenarios" class="nav-link text-gray-400 hover:text-white transition-colors text-sm">应用场景</a>
+        <a href="#code" class="nav-link text-gray-400 hover:text-white transition-colors text-sm">源码下载</a>
+        <a href="#faq" class="nav-link text-gray-400 hover:text-white transition-colors text-sm">FAQ</a>
+        
+        <!-- 主题切换按钮 -->
+        <button id="themeToggle" class="p-2 rounded-lg hover:bg-terminal-surface transition-colors text-gray-400">
+            <i class="fas fa-moon text-lg" id="themeIcon"></i>
+        </button>
       </div>
+      
       <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg hover:bg-terminal-surface transition-colors">
-        <i class="fas fa-bars text-xl"></i>
+        <i class="fas fa-bars text-xl text-white"></i>
       </button>
     </div>
   </div>
 </nav>
 
 <!-- Mobile Menu -->
-<div id="mobileMenu" class="fixed inset-0 z-40 bg-terminal-bg/95 backdrop-blur-md hidden">
-  <div class="flex flex-col items-center justify-center h-full gap-8">
-    <a href="#features" class="text-2xl text-gray-300 hover:text-terminal-green transition-colors" onclick="closeMobileMenu()">功能特性</a>
-    <a href="#tutorial" class="text-2xl text-gray-300 hover:text-terminal-green transition-colors" onclick="closeMobileMenu()">使用教程</a>
-    <a href="#code" class="text-2xl text-gray-300 hover:text-terminal-green transition-colors" onclick="closeMobileMenu()">完整代码</a>
-    <a href="#faq" class="text-2xl text-gray-300 hover:text-terminal-green transition-colors" onclick="closeMobileMenu()">常见问题</a>
-    <button onclick="closeMobileMenu()" class="mt-8 p-3 rounded-full bg-terminal-surface hover:bg-terminal-border transition-colors">
-      <i class="fas fa-times text-2xl"></i>
+<div id="mobileMenu" class="fixed inset-0 z-40 bg-terminal-bg/98 backdrop-blur-md hidden md:hidden flex-col justify-between py-12 px-8">
+    <div class="flex flex-col gap-6 mt-12">
+        <a href="#generator" class="text-2xl text-gray-300 hover:text-terminal-green transition-colors" onclick="closeMobileMenu()">命令生成器</a>
+        <a href="#features" class="text-2xl text-gray-300 hover:text-terminal-green transition-colors" onclick="closeMobileMenu()">功能特性</a>
+        <a href="#scenarios" class="text-2xl text-gray-300 hover:text-terminal-green transition-colors" onclick="closeMobileMenu()">使用场景</a>
+        <a href="#code" class="text-2xl text-gray-300 hover:text-terminal-green transition-colors" onclick="closeMobileMenu()">源码下载</a>
+        <a href="#faq" class="text-2xl text-gray-300 hover:text-terminal-green transition-colors" onclick="closeMobileMenu()">常见问题</a>
+    </div>
+    <button onclick="closeMobileMenu()" class="p-3 rounded-full bg-terminal-surface hover:bg-terminal-border transition-colors self-end">
+        <i class="fas fa-times text-2xl text-gray-400"></i>
     </button>
-  </div>
 </div>
 
 <!-- Hero Section -->
-<section class="min-h-screen flex items-center justify-center pt-16 px-4 relative overflow-hidden">
+<section class="min-h-screen flex items-center justify-center pt-20 pb-12 px-4 relative overflow-hidden">
   <!-- Background Effects -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
     <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-terminal-green/10 rounded-full blur-3xl"></div>
     <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-terminal-cyan/10 rounded-full blur-3xl"></div>
   </div>
   
-  <div class="max-w-5xl mx-auto text-center relative z-10">
-    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-terminal-surface border border-terminal-border mb-8">
-      <span class="w-2 h-2 rounded-full bg-terminal-green animate-pulse"></span>
-      <span class="text-sm text-gray-400">Windows 批处理脚本</span>
-    </div>
-    
-    <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 leading-tight">
-      <span class="text-white">Windows 自动化</span><br>
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-terminal-green via-terminal-cyan to-terminal-purple">开关机程序</span>
-    </h1>
-    
-    <p class="text-lg sm:text-xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
-      功能强大的批处理脚本，支持定时关机、重启、休眠、注销等多种操作，<br class="hidden sm:block">
-      配合任务计划程序实现全自动化的开关机管理
-    </p>
-    
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-      <a href="#tutorial" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-terminal-green to-terminal-cyan text-white font-semibold text-lg hover:opacity-90 transition-all pulse-animation">
-        <i class="fas fa-play mr-2"></i>开始学习
-      </a>
-      <a href="#code" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-terminal-surface border border-terminal-border text-white font-semibold text-lg hover:border-terminal-green/50 transition-all">
-        <i class="fas fa-code mr-2"></i>查看代码
-      </a>
-    </div>
-    
-    <!-- Terminal Preview -->
-    <div class="terminal-window rounded-2xl border border-terminal-border overflow-hidden shadow-2xl max-w-3xl mx-auto">
-      <div class="flex items-center gap-2 px-4 py-3 bg-terminal-surface border-b border-terminal-border">
-        <div class="w-3 h-3 rounded-full bg-terminal-red"></div>
-        <div class="w-3 h-3 rounded-full bg-terminal-yellow"></div>
-        <div class="w-3 h-3 rounded-full bg-terminal-green"></div>
-        <span class="ml-4 text-sm text-gray-500 code-font">AutoShutdown.bat</span>
-      </div>
-      <div class="p-6 code-font text-sm sm:text-base text-left overflow-x-auto">
-        <div class="text-terminal-cyan">========================================</div>
-        <div class="text-terminal-green text-lg font-bold">    Windows 自动化开关机程序 v2.0</div>
-        <div class="text-terminal-cyan">========================================</div>
-        <div class="mt-4 text-gray-400">请选择操作:</div>
-        <div class="mt-2"><span class="text-terminal-yellow">[1]</span> <span class="text-white">定时关机</span></div>
-        <div><span class="text-terminal-yellow">[2]</span> <span class="text-white">定时重启</span></div>
-        <div><span class="text-terminal-yellow">[3]</span> <span class="text-white">取消所有任务</span></div>
-        <div><span class="text-terminal-yellow">[4]</span> <span class="text-white">查看系统信息</span></div>
-        <div class="mt-4 text-terminal-green">请输入选项: _</div>
-      </div>
+  <div class="max-w-6xl mx-auto w-full relative z-10">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <!-- Left Content -->
+        <div class="text-center lg:text-left">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-terminal-surface border border-terminal-border mb-6">
+            <span class="w-2 h-2 rounded-full bg-terminal-green animate-pulse"></span>
+            <span class="text-sm text-gray-400">轻量级 · 无需安装 · 开源</span>
+            </div>
+            
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+            <span class="text-white">Windows</span>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-terminal-green via-terminal-cyan to-terminal-purple block mt-2">自动化开关机</span>
+            <span class="text-gray-400 text-3xl sm:text-4xl block mt-2 font-normal">增强控制中心</span>
+            </h1>
+            
+            <p class="text-lg text-gray-400 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
+            告别繁琐的手动操作，通过图形化界面生成命令，或下载增强版脚本实现定时关机、重启、休眠等高级自动化任务。
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center gap-4">
+            <a href="#generator" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-terminal-green to-terminal-cyan text-white font-semibold hover:opacity-90 transition-all pulse-animation shadow-lg">
+                <i class="fas fa-magic mr-2"></i>快速生成命令
+            </a>
+            <a href="#code" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-terminal-surface border border-terminal-border text-white font-semibold hover:border-terminal-green/50 transition-all">
+                <i class="fas fa-download mr-2"></i>下载脚本 v2.5
+            </a>
+            </div>
+        </div>
+
+        <!-- Right Content: Terminal Preview -->
+        <div class="terminal-window rounded-2xl border border-terminal-border overflow-hidden shadow-2xl">
+          <div class="flex items-center gap-2 px-4 py-3 bg-terminal-surface border-b border-terminal-border">
+            <div class="w-3 h-3 rounded-full bg-terminal-red"></div>
+            <div class="w-3 h-3 rounded-full bg-terminal-yellow"></div>
+            <div class="w-3 h-3 rounded-full bg-terminal-green"></div>
+            <span class="ml-4 text-sm text-gray-500 code-font">AutoShutdown.bat</span>
+          </div>
+          <div class="p-6 code-font text-sm sm:text-base text-left overflow-x-auto min-h-[300px]">
+            <div class="text-terminal-cyan">Microsoft Windows [版本 10.0.22000]</div>
+            <div class="text-gray-500">(c) AutoShutdown. 保留所有权利。</div>
+            <br>
+            <div class="text-terminal-green">C:\Users\User></div>
+            <div class="text-white mt-2">AutoShutdown.bat</div>
+            <br>
+            <div class="text-terminal-cyan">========================================</div>
+            <div class="text-terminal-green text-lg font-bold">    Windows 自动化开关机程序 v2.5</div>
+            <div class="text-terminal-cyan">========================================</div>
+            <br>
+            <div class="text-white">初始化系统环境... <span class="text-terminal-green">[成功]</span></div>
+            <div class="text-white">检测管理员权限... <span class="text-terminal-green">[已授权]</span></div>
+            <br>
+            <div class="text-gray-400">请选择操作:</div>
+            <div class="mt-2"><span class="text-terminal-yellow">[1]</span> <span class="text-white">定时关机</span></div>
+            <div><span class="text-terminal-yellow">[2]</span> <span class="text-white">定时重启</span></div>
+            <div><span class="text-terminal-yellow">[3]</span> <span class="text-white">自定义界面颜色</span></div>
+            <br>
+            <div class="typing-effect text-terminal-green">请输入选项: _</div>
+          </div>
+        </div>
     </div>
   </div>
+</section>
+
+<!-- Interactive Generator Section -->
+<section id="generator" class="py-20 px-4 bg-terminal-surface/30 relative">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">可视化命令生成器</h2>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto">无需编写代码，只需简单选择，自动生成命令。适合小白用户快速操作。</p>
+      </div>
+      
+      <div class="grid lg:grid-cols-2 gap-8">
+          <!-- Controls -->
+          <div class="card-surface rounded-2xl p-6 border border-terminal-border">
+              <h3 class="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                  <i class="fas fa-sliders-h text-terminal-cyan"></i> 配置参数
+              </h3>
+              
+              <div class="space-y-6">
+                  <!-- Operation Type -->
+                  <div>
+                      <label class="block text-gray-400 text-sm font-medium mb-2">操作类型</label>
+                      <select id="genOperation" class="input-bg w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-terminal-cyan code-font">
+                          <option value="shutdown">定时关机</option>
+                          <option value="restart">定时重启</option>
+                          <option value="hibernate">系统休眠</option>
+                          <option value="logoff">用户注销</option>
+                      </select>
+                  </div>
+  
+                  <!-- Time Type -->
+                  <div id="timeTypeContainer">
+                      <label class="block text-gray-400 text-sm font-medium mb-2">时间模式</label>
+                      <div class="flex gap-4">
+                          <label class="flex items-center gap-2 cursor-pointer">
+                              <input type="radio" name="timeType" value="seconds" checked class="text-terminal-green focus:ring-terminal-green">
+                              <span class="text-white">倒计时 (秒)</span>
+                          </label>
+                          <label class="flex items-center gap-2 cursor-pointer">
+                              <input type="radio" name="timeType" value="specific" class="text-terminal-green focus:ring-terminal-green">
+                              <span class="text-white">指定时间</span>
+                          </label>
+                      </div>
+                  </div>
+  
+                  <!-- Time Input -->
+                  <div>
+                      <label class="block text-gray-400 text-sm font-medium mb-2" id="timeInputLabel">倒计时秒数</label>
+                      <input type="text" id="genTime" placeholder="例如: 3600 (1小时)" class="input-bg w-full px-4 py-3 rounded-lg border code-font">
+                      <p class="text-xs text-gray-500 mt-1 hidden" id="timeHelperText">常用：3600(1h), 7200(2h), 1800(30m)</p>
+                  </div>
+  
+                  <!-- Options -->
+                  <div class="flex items-center gap-4">
+                      <label class="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" id="genForce" checked class="text-terminal-green focus:ring-terminal-green rounded">
+                          <span class="text-white text-sm">强制关闭应用程序</span>
+                      </label>
+                  </div>
+              </div>
+  
+              <button onclick="generateCommand()" class="mt-8 w-full py-4 rounded-xl bg-gradient-to-r from-terminal-green to-terminal-cyan text-white font-semibold hover:opacity-90 transition-all shadow-lg">
+                  <i class="fas fa-cogs mr-2"></i>生成命令
+              </button>
+          </div>
+  
+          <!-- Output -->
+          <div class="card-surface rounded-2xl p-6 border border-terminal-border flex flex-col">
+              <h3 class="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                  <i class="fas fa-code text-terminal-yellow"></i> 生成结果
+              </h3>
+              
+              <div class="flex-1 bg-terminal-bg rounded-xl p-4 border border-terminal-border mb-4 code-font text-sm overflow-auto">
+                  <pre id="generatedCodeOutput" class="text-gray-300 whitespace-pre-wrap break-all">
+在此处生成你的命令...
+                  </pre>
+              </div>
+  
+              <div class="text-gray-400 text-sm mb-6 bg-terminal-surface p-4 rounded-lg border-l-4 border-terminal-cyan hidden" id="commandExplanation">
+                  <p class="font-bold text-white mb-1">💡 指令说明：</p>
+                  <p id="explanationText"></p>
+              </div>
+  
+              <div class="grid grid-cols-2 gap-4">
+                  <button onclick="copyGeneratedCommand()" class="w-full py-3 rounded-lg bg-terminal-surface border border-terminal-border text-terminal-green hover:bg-terminal-green/10 transition-all font-medium">
+                      <i class="fas fa-copy mr-2"></i>复制命令
+                  </button>
+                  <button onclick="downloadBatFile()" class="w-full py-3 rounded-lg bg-terminal-surface border border-terminal-border text-terminal-cyan hover:bg-terminal-cyan/10 transition-all font-medium">
+                      <i class="fas fa-file-download mr-2"></i>下载脚本
+                  </button>
+              </div>
+          </div>
+      </div>
+    </div>
 </section>
 
 <!-- Features Section -->
 <section id="features" class="py-24 px-4 relative">
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-16">
-      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">功能特性</h2>
-      <p class="text-gray-400 text-lg max-w-2xl mx-auto">一个脚本，多种功能，满足你的所有自动化需求</p>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">核心功能特性</h2>
+      <p class="text-gray-400 text-lg max-w-2xl mx-auto">不仅仅是关机，打造全方位的系统控制体验</p>
     </div>
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Feature Cards -->
-      <div class="feature-card rounded-2xl p-6 hover:border-terminal-green/50 transition-all group">
+      <div class="feature-card card-surface rounded-2xl p-6 border border-terminal-border group">
         <div class="w-14 h-14 rounded-xl bg-terminal-red/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
           <i class="fas fa-power-off text-2xl text-terminal-red"></i>
         </div>
-        <h3 class="text-xl font-semibold text-white mb-2">定时关机</h3>
-        <p class="text-gray-400">支持秒级精度的定时关机，可设置具体时间或倒计时关机</p>
+        <h3 class="text-xl font-semibold text-white mb-2">智能定时关机</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">支持秒级精度定时，可设置具体时刻（如 23:00）或倒计时。支持强制关闭无响应程序。</p>
       </div>
       
-      <div class="feature-card rounded-2xl p-6 hover:border-terminal-green/50 transition-all group">
+      <div class="feature-card card-surface rounded-2xl p-6 border border-terminal-border group">
         <div class="w-14 h-14 rounded-xl bg-terminal-cyan/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
           <i class="fas fa-sync-alt text-2xl text-terminal-cyan"></i>
         </div>
-        <h3 class="text-xl font-semibold text-white mb-2">定时重启</h3>
-        <p class="text-gray-400">灵活设置系统重启时间，支持强制关闭应用程序</p>
+        <h3 class="text-xl font-semibold text-white mb-2">计划任务重启</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">设定每日凌晨自动重启服务器，清理内存碎片，保持系统最佳性能。</p>
       </div>
       
-      <div class="feature-card rounded-2xl p-6 hover:border-terminal-green/50 transition-all group">
+      <div class="feature-card card-surface rounded-2xl p-6 border border-terminal-border group">
         <div class="w-14 h-14 rounded-xl bg-terminal-purple/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-          <i class="fas fa-moon text-2xl text-terminal-purple"></i>
+          <i class="fas fa-palette text-2xl text-terminal-purple"></i>
         </div>
-        <h3 class="text-xl font-semibold text-white mb-2">休眠/睡眠</h3>
-        <p class="text-gray-400">支持系统休眠和睡眠模式，节省电力同时快速恢复</p>
+        <h3 class="text-xl font-semibold text-white mb-2">界面自定义</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">内置颜色选择器，不喜欢黑底绿字？一键切换成赛博朋克风、海洋风等多种配色主题。</p>
       </div>
       
-      <div class="feature-card rounded-2xl p-6 hover:border-terminal-green/50 transition-all group">
+      <div class="feature-card card-surface rounded-2xl p-6 border border-terminal-border group">
         <div class="w-14 h-14 rounded-xl bg-terminal-yellow/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-          <i class="fas fa-sign-out-alt text-2xl text-terminal-yellow"></i>
+          <i class="fas fa-shield-alt text-2xl text-terminal-yellow"></i>
         </div>
-        <h3 class="text-xl font-semibold text-white mb-2">用户注销</h3>
-        <p class="text-gray-400">快速注销当前用户，支持强制注销选项</p>
+        <h3 class="text-xl font-semibold text-white mb-2">权限自动化</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">自动检测运行环境，若权限不足将弹出UAC请求，确保脚本在管理员模式下运行。</p>
       </div>
       
-      <div class="feature-card rounded-2xl p-6 hover:border-terminal-green/50 transition-all group">
+      <div class="feature-card card-surface rounded-2xl p-6 border border-terminal-border group">
         <div class="w-14 h-14 rounded-xl bg-terminal-green/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-          <i class="fas fa-tasks text-2xl text-terminal-green"></i>
+          <i class="fas fa-laptop-code text-2xl text-terminal-green"></i>
         </div>
-        <h3 class="text-xl font-semibold text-white mb-2">任务管理</h3>
-        <p class="text-gray-400">查看、取消所有计划任务，支持任务列表管理</p>
+        <h3 class="text-xl font-semibold text-white mb-2">便携轻量</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">单个 .bat 文件，仅约 15KB 大小。无需安装，放入U盘随处可用，不占系统资源。</p>
       </div>
       
-      <div class="feature-card rounded-2xl p-6 hover:border-terminal-green/50 transition-all group">
+      <div class="feature-card card-surface rounded-2xl p-6 border border-terminal-border group">
         <div class="w-14 h-14 rounded-xl bg-terminal-orange/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-          <i class="fas fa-clock text-2xl text-terminal-orange"></i>
+          <i class="fas fa-bug text-2xl text-terminal-orange"></i>
         </div>
-        <h3 class="text-xl font-semibold text-white mb-2">任务计划</h3>
-        <p class="text-gray-400">集成Windows任务计划程序，实现开机自动执行</p>
-      </div>
-      
-      <div class="feature-card rounded-2xl p-6 hover:border-terminal-green/50 transition-all group">
-        <div class="w-14 h-14 rounded-xl bg-terminal-cyan/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-          <i class="fas fa-info-circle text-2xl text-terminal-cyan"></i>
-        </div>
-        <h3 class="text-xl font-semibold text-white mb-2">系统信息</h3>
-        <p class="text-gray-400">显示系统运行时间、CPU、内存等关键信息</p>
-      </div>
-      
-      <div class="feature-card rounded-2xl p-6 hover:border-terminal-green/50 transition-all group">
-        <div class="w-14 h-14 rounded-xl bg-terminal-red/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-          <i class="fas fa-shield-alt text-2xl text-terminal-red"></i>
-        </div>
-        <h3 class="text-xl font-semibold text-white mb-2">管理员权限</h3>
-        <p class="text-gray-400">自动检测并请求管理员权限，确保操作顺利执行</p>
-      </div>
-      
-      <div class="feature-card rounded-2xl p-6 hover:border-terminal-green/50 transition-all group">
-        <div class="w-14 h-14 rounded-xl bg-terminal-green/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-          <i class="fas fa-file-alt text-2xl text-terminal-green"></i>
-        </div>
-        <h3 class="text-xl font-semibold text-white mb-2">日志记录</h3>
-        <p class="text-gray-400">完整的操作日志记录，方便追踪和调试</p>
+        <h3 class="text-xl font-semibold text-white mb-2">错误处理</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">输入了错误的时间格式？脚本会自动拦截并提示重新输入，防止误操作。</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Tutorial Section -->
-<section id="tutorial" class="py-24 px-4 bg-terminal-surface/30">
-  <div class="max-w-5xl mx-auto">
-    <div class="text-center mb-16">
-      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">使用教程</h2>
-      <p class="text-gray-400 text-lg">按照以下步骤，轻松部署自动化开关机程序</p>
-    </div>
-    
-    <!-- Steps -->
-    <div class="space-y-8">
-      <!-- Step 1 -->
-      <div class="flex gap-6">
-        <div class="flex-shrink-0">
-          <div class="step-indicator w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg">1</div>
-        </div>
-        <div class="flex-1">
-          <h3 class="text-xl font-semibold text-white mb-3">创建脚本文件</h3>
-          <p class="text-gray-400 mb-4">在桌面或任意位置新建一个文本文件，将下方完整代码复制粘贴进去，保存后将文件扩展名改为 <code class="px-2 py-1 rounded bg-terminal-surface text-terminal-cyan code-font">.bat</code></p>
-          <div class="code-block rounded-xl p-4 code-font text-sm">
-            <div class="text-gray-500"># 文件名示例</div>
-            <div class="text-terminal-green">AutoShutdown.bat</div>
-          </div>
-        </div>
+<!-- Scenarios Section -->
+<section id="scenarios" class="py-24 px-4 bg-terminal-surface/30">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">应用场景指南</h2>
+        <p class="text-gray-400 text-lg">看看别人都在怎么用这个脚本提升效率</p>
       </div>
       
-      <!-- Step 2 -->
-      <div class="flex gap-6">
-        <div class="flex-shrink-0">
-          <div class="step-indicator w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg">2</div>
-        </div>
-        <div class="flex-1">
-          <h3 class="text-xl font-semibold text-white mb-3">以管理员身份运行</h3>
-          <p class="text-gray-400 mb-4">右键点击脚本文件，选择"以管理员身份运行"，确保脚本拥有足够的权限执行系统操作</p>
-          <div class="code-block rounded-xl p-4 code-font text-sm">
-            <div class="text-terminal-yellow">右键菜单 → 以管理员身份运行</div>
+      <div class="grid lg:grid-cols-2 gap-8">
+          <!-- Scenario 1 -->
+          <div class="flex gap-6 items-start p-6 card-surface rounded-xl border border-terminal-border hover:border-terminal-cyan transition-all">
+              <div class="flex-shrink-0 w-12 h-12 rounded-full bg-terminal-cyan/20 flex items-center justify-center text-terminal-cyan text-xl font-bold">1</div>
+              <div>
+                  <h3 class="text-xl font-semibold text-white mb-2">挂机下载/渲染</h3>
+                  <p class="text-gray-400 text-sm mb-3">大文件下载或视频渲染需要几小时，又不想半夜起来关电脑？</p>
+                  <div class="bg-terminal-bg p-3 rounded-lg code-font text-xs text-gray-300">
+                      <span class="text-gray-500"># 设置3小时后自动关机</span><br>
+                      shutdown -s -t 10800
+                  </div>
+              </div>
           </div>
-        </div>
-      </div>
-      
-      <!-- Step 3 -->
-      <div class="flex gap-6">
-        <div class="flex-shrink-0">
-          <div class="step-indicator w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg">3</div>
-        </div>
-        <div class="flex-1">
-          <h3 class="text-xl font-semibold text-white mb-3">选择操作类型</h3>
-          <p class="text-gray-400 mb-4">根据菜单提示输入对应的数字，选择你需要的操作类型</p>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div class="bg-terminal-surface rounded-lg p-3 text-center border border-terminal-border">
-              <div class="text-terminal-yellow font-bold code-font">1</div>
-              <div class="text-sm text-gray-400">定时关机</div>
-            </div>
-            <div class="bg-terminal-surface rounded-lg p-3 text-center border border-terminal-border">
-              <div class="text-terminal-yellow font-bold code-font">2</div>
-              <div class="text-sm text-gray-400">定时重启</div>
-            </div>
-            <div class="bg-terminal-surface rounded-lg p-3 text-center border border-terminal-border">
-              <div class="text-terminal-yellow font-bold code-font">3</div>
-              <div class="text-sm text-gray-400">取消任务</div>
-            </div>
-            <div class="bg-terminal-surface rounded-lg p-3 text-center border border-terminal-border">
-              <div class="text-terminal-yellow font-bold code-font">4</div>
-              <div class="text-sm text-gray-400">系统信息</div>
-            </div>
+  
+          <!-- Scenario 2 -->
+          <div class="flex gap-6 items-start p-6 card-surface rounded-xl border border-terminal-border hover:border-terminal-green transition-all">
+              <div class="flex-shrink-0 w-12 h-12 rounded-full bg-terminal-green/20 flex items-center justify-center text-terminal-green text-xl font-bold">2</div>
+              <div>
+                  <h3 class="text-xl font-semibold text-white mb-2">家长控制模式</h3>
+                  <p class="text-gray-400 text-sm mb-3">限制孩子玩电脑时间，每天晚上22:00强制关机。</p>
+                  <div class="bg-terminal-bg p-3 rounded-lg code-font text-xs text-gray-300">
+                      <span class="text-gray-500"># 创建每日22:00关机任务</span><br>
+                      at 22:00 /every:M,T,W,Th,F,S,Su shutdown -s -f
+                  </div>
+              </div>
           </div>
-        </div>
-      </div>
-      
-      <!-- Step 4 -->
-      <div class="flex gap-6">
-        <div class="flex-shrink-0">
-          <div class="step-indicator w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg">4</div>
-        </div>
-        <div class="flex-1">
-          <h3 class="text-xl font-semibold text-white mb-3">设置任务计划（可选）</h3>
-          <p class="text-gray-400 mb-4">如需开机自动执行，可使用Windows任务计划程序添加开机启动任务</p>
-          <div class="code-block rounded-xl p-4 code-font text-sm overflow-x-auto">
-            <div class="text-gray-500"># 打开任务计划程序</div>
-            <div class="text-terminal-cyan">Win + R → taskschd.msc</div>
-            <div class="mt-2 text-gray-500"># 创建基本任务</div>
-            <div class="text-terminal-cyan">操作 → 创建基本任务 → 触发器：计算机启动时</div>
+  
+          <!-- Scenario 3 -->
+          <div class="flex gap-6 items-start p-6 card-surface rounded-xl border border-terminal-border hover:border-terminal-purple transition-all">
+              <div class="flex-shrink-0 w-12 h-12 rounded-full bg-terminal-purple/20 flex items-center justify-center text-terminal-purple text-xl font-bold">3</div>
+              <div>
+                  <h3 class="text-xl font-semibold text-white mb-2">服务器/软路由维护</h3>
+                  <p class="text-gray-400 text-sm mb-3">Windows作为软路由或家庭服务器，长期运行需定期重启释放内存。</p>
+                  <div class="bg-terminal-bg p-3 rounded-lg code-font text-xs text-gray-300">
+                      <span class="text-gray-500"># 每天凌晨4点自动重启</span><br>
+                      schtasks /create /tn "AutoReboot" /tr "shutdown /r /f" /sc daily /st 04:00
+                  </div>
+              </div>
           </div>
-        </div>
+  
+          <!-- Scenario 4 -->
+          <div class="flex gap-6 items-start p-6 card-surface rounded-xl border border-terminal-border hover:border-terminal-yellow transition-all">
+              <div class="flex-shrink-0 w-12 h-12 rounded-full bg-terminal-yellow/20 flex items-center justify-center text-terminal-yellow text-xl font-bold">4</div>
+              <div>
+                  <h3 class="text-xl font-semibold text-white mb-2">公司电脑节能</h3>
+                  <p class="text-gray-400 text-sm mb-3">下班忘记关机？设置工作日每天下午6点休眠。</p>
+                  <div class="bg-terminal-bg p-3 rounded-lg code-font text-xs text-gray-300">
+                      <span class="text-gray-500"># 工作日18:00进入休眠</span><br>
+                      schtasks /create /tn "OfficeSave" /tr "shutdown /h" /sc weekly /d MON,TUE,WED,THU,FRI /st 18:00
+                  </div>
+              </div>
+          </div>
       </div>
     </div>
-  </div>
 </section>
 
 <!-- Code Section -->
 <section id="code" class="py-24 px-4">
   <div class="max-w-5xl mx-auto">
     <div class="text-center mb-12">
-      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">完整代码</h2>
-      <p class="text-gray-400 text-lg">复制以下代码保存为 .bat 文件即可使用</p>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">完整源码与使用</h2>
+      <p class="text-gray-400 text-lg">复制代码或直接下载 .bat 文件使用</p>
     </div>
     
     <!-- Code Block -->
-    <div class="code-block rounded-2xl overflow-hidden">
+    <div class="card-surface rounded-2xl overflow-hidden border border-terminal-border shadow-xl">
       <div class="flex items-center justify-between px-4 py-3 bg-terminal-surface border-b border-terminal-border">
         <div class="flex items-center gap-2">
           <div class="w-3 h-3 rounded-full bg-terminal-red"></div>
           <div class="w-3 h-3 rounded-full bg-terminal-yellow"></div>
           <div class="w-3 h-3 rounded-full bg-terminal-green"></div>
-          <span class="ml-4 text-sm text-gray-500 code-font">AutoShutdown.bat</span>
+          <span class="ml-4 text-sm text-gray-500 code-font">AutoShutdown_v2.5.bat</span>
         </div>
-        <button id="copyBtn" class="copy-btn flex items-center gap-2 px-4 py-2 rounded-lg bg-terminal-green/20 text-terminal-green hover:bg-terminal-green/30 transition-all">
+        <button id="copyCodeBtn" class="copy-btn flex items-center gap-2 px-4 py-2 rounded-lg bg-terminal-green/20 text-terminal-green hover:bg-terminal-green/30 transition-all text-sm font-medium">
           <i class="fas fa-copy"></i>
           <span>复制代码</span>
         </button>
       </div>
-      <div class="p-6 code-font text-sm overflow-x-auto max-h-[600px] overflow-y-auto">
-        <pre id="codeContent" class="text-gray-300 whitespace-pre-wrap">@echo off
+      <div class="p-4 md:p-6 code-font text-sm overflow-x-auto max-h-[500px] overflow-y-auto bg-terminal-bg">
+        <pre id="fullCodeContent" class="text-gray-300 whitespace-pre-wrap">@echo off
 chcp 65001 >nul
-title Windows 自动化开关机程序 v2.0
+title Windows 自动化开关机程序 v2.5
 color 0A
 
 :: ========================================
-:: Windows 自动化开关机程序 v2.0
-:: 功能：定时关机、重启、休眠、注销等
-:: 作者：Your Name
-:: GitHub: https://github.com/yourusername
+:: 主菜单
 :: ========================================
-
-:: 检查管理员权限
-net session >nul 2>&1
-if %errorLevel% neq 0 (
-    echo.
-    echo  [!] 正在请求管理员权限...
-    powershell -Command "Start-Process '%~f0' -Verb RunAs"
-    exit /b
-)
-
 :MAIN_MENU
 cls
 echo.
 echo  ╔══════════════════════════════════════════════════════╗
-echo  ║                                                      ║
-echo  ║       Windows 自动化开关机程序 v2.0                  ║
-echo  ║                                                      ║
+echo  ║       Windows 自动化开关机程序 v2.5                  ║
+echo  ║       (支持自定义颜色与任务计划)                     ║
 echo  ╚══════════════════════════════════════════════════════╝
 echo.
 echo  ┌──────────────────────────────────────────────────────┐
-echo  │  [1] 定时关机          [6] 每日定时关机              │
-echo  │  [2] 定时重启          [7] 每日定时重启              │
-echo  │  [3] 系统休眠          [8] 取消所有任务              │
-echo  │  [4] 系统睡眠          [9] 查看计划任务              │
-echo  │  [5] 用户注销          [10] 系统信息                 │
+echo  │  [1] 定时关机          [5] 设置界面颜色              │
+echo  │  [2] 定时重启          [6] 每日定时任务              │
+echo  │  [3] 系统休眠          [7] 取消所有任务              │
+echo  │  [4] 用户注销          [8] 系统信息                 │
 echo  │                                                      │
 echo  │  [0] 退出程序                                        │
 echo  └──────────────────────────────────────────────────────┘
 echo.
-
-set /p choice="  请输入选项 [0-10]: "
+set /p choice="  请输入选项 [0-8]: "
 
 if "%choice%"=="1" goto SHUTDOWN_TIMER
 if "%choice%"=="2" goto RESTART_TIMER
 if "%choice%"=="3" goto HIBERNATE
-if "%choice%"=="4" goto SLEEP
-if "%choice%"=="5" goto LOGOFF
-if "%choice%"=="6" goto DAILY_SHUTDOWN
-if "%choice%"=="7" goto DAILY_RESTART
-if "%choice%"=="8" goto CANCEL_ALL
-if "%choice%"=="9" goto VIEW_TASKS
-if "%choice%"=="10" goto SYSTEM_INFO
+if "%choice%"=="4" goto LOGOFF
+if "%choice%"=="5" goto COLOR_SETTINGS
+if "%choice%"=="6" goto DAILY_TASK
+if "%choice%"=="7" goto CANCEL_ALL
+if "%choice%"=="8" goto SYSTEM_INFO
 if "%choice%"=="0" goto EXIT_PROGRAM
 
 echo.
-echo  [!] 无效的选项，请重新选择...
+echo  [!] 无效的选项...
 timeout /t 2 >nul
 goto MAIN_MENU
 
 :: ========================================
-:: 定时关机
+:: 定时关机模块
 :: ========================================
 :SHUTDOWN_TIMER
 cls
+echo  [定时关机设置]
 echo.
-echo  ══════════════════════════════════════
-echo         定时关机设置
-echo  ══════════════════════════════════════
-echo.
-echo  [1] 倒计时关机（秒）
-echo  [2] 指定时间关机（HH:MM）
-echo  [3] 返回主菜单
-echo.
-set /p st_choice="  请选择方式: "
-
-if "%st_choice%"=="1" (
-    set /p seconds="  请输入倒计时秒数: "
-    shutdown /s /t %seconds%
-    echo.
-    echo  [√] 系统将在 %seconds% 秒后关机
-    echo.
+set /p seconds="请输入倒计时秒数 (输入 0 取消): "
+if "%seconds%"=="0" (
+    shutdown /a
+    echo 已取消关机计划。
     pause
     goto MAIN_MENU
 )
-
-if "%st_choice%"=="2" (
-    set /p time_input="  请输入关机时间 (格式: HH:MM，如 22:30): "
-    at %time_input% shutdown /s /f
-    echo.
-    echo  [√] 系统将在 %time_input% 关机
-    echo.
-    pause
-    goto MAIN_MENU
-)
-
-if "%st_choice%"=="3" goto MAIN_MENU
-
-echo  [!] 无效选项
-timeout /t 2 >nul
-goto SHUTDOWN_TIMER
-
-:: ========================================
-:: 定时重启
-:: ========================================
-:RESTART_TIMER
-cls
-echo.
-echo  ══════════════════════════════════════
-echo         定时重启设置
-echo  ══════════════════════════════════════
-echo.
-echo  [1] 倒计时重启（秒）
-echo  [2] 指定时间重启（HH:MM）
-echo  [3] 返回主菜单
-echo.
-set /p rt_choice="  请选择方式: "
-
-if "%rt_choice%"=="1" (
-    set /p seconds="  请输入倒计时秒数: "
-    shutdown /r /t %seconds%
-    echo.
-    echo  [√] 系统将在 %seconds% 秒后重启
-    echo.
-    pause
-    goto MAIN_MENU
-)
-
-if "%rt_choice%"=="2" (
-    set /p time_input="  请输入重启时间 (格式: HH:MM): "
-    at %time_input% shutdown /r /f
-    echo.
-    echo  [√] 系统将在 %time_input% 重启
-    echo.
-    pause
-    goto MAIN_MENU
-)
-
-if "%rt_choice%"=="3" goto MAIN_MENU
-
-echo  [!] 无效选项
-timeout /t 2 >nul
-goto RESTART_TIMER
-
-:: ========================================
-:: 系统休眠
-:: ========================================
-:HIBERNATE
-cls
-echo.
-echo  ══════════════════════════════════════
-echo         系统休眠设置
-echo  ══════════════════════════════════════
-echo.
-echo  [1] 立即休眠
-echo  [2] 定时休眠
-echo  [3] 返回主菜单
-echo.
-set /p hib_choice="  请选择: "
-
-if "%hib_choice%"=="1" (
-    shutdown /h
-    goto MAIN_MENU
-)
-
-if "%hib_choice%"=="2" (
-    set /p seconds="  请输入倒计时秒数: "
-    timeout /t %seconds% /nobreak
-    shutdown /h
-    goto MAIN_MENU
-)
-
-if "%hib_choice%"=="3" goto MAIN_MENU
-
-echo  [!] 无效选项
-timeout /t 2 >nul
-goto HIBERNATE
-
-:: ========================================
-:: 系统睡眠
-:: ========================================
-:SLEEP
-cls
-echo.
-echo  ══════════════════════════════════════
-echo         系统睡眠设置
-echo  ══════════════════════════════════════
-echo.
-set /p sleep_confirm="  确定要让系统进入睡眠模式吗？(Y/N): "
-
-if /i "%sleep_confirm%"=="Y" (
-    powershell -Command "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Application]::SetSuspendState('Suspend', $false, $false)"
-    echo.
-    echo  [√] 系统正在进入睡眠模式...
-    timeout /t 2 >nul
-)
-goto MAIN_MENU
-
-:: ========================================
-:: 用户注销
-:: ========================================
-:LOGOFF
-cls
-echo.
-echo  ══════════════════════════════════════
-echo         用户注销设置
-echo  ══════════════════════════════════════
-echo.
-echo  [1] 立即注销
-echo  [2] 定时注销
-echo  [3] 返回主菜单
-echo.
-set /p log_choice="  请选择: "
-
-if "%log_choice%"=="1" (
-    shutdown /l
-    exit
-)
-
-if "%log_choice%"=="2" (
-    set /p seconds="  请输入倒计时秒数: "
-    timeout /t %seconds% /nobreak
-    shutdown /l
-    exit
-)
-
-if "%log_choice%"=="3" goto MAIN_MENU
-
-echo  [!] 无效选项
-timeout /t 2 >nul
-goto LOGOFF
-
-:: ========================================
-:: 每日定时关机
-:: ========================================
-:DAILY_SHUTDOWN
-cls
-echo.
-echo  ══════════════════════════════════════
-echo       每日定时关机设置
-echo  ══════════════════════════════════════
-echo.
-set /p daily_time="  请输入每日关机时间 (格式: HH:MM): "
-set /p task_name="  请输入任务名称 (默认: DailyShutdown): "
-
-if "%task_name%"=="" set task_name=DailyShutdown
-
-schtasks /create /tn "%task_name%" /tr "shutdown /s /f" /sc daily /st %daily_time% /f
-echo.
-echo  [√] 已创建每日 %daily_time% 关机任务
-echo.
+shutdown /s /t %seconds%
+echo 系统将在 %seconds% 秒后关机。
 pause
 goto MAIN_MENU
 
 :: ========================================
-:: 每日定时重启
+:: 定时重启模块
 :: ========================================
-:DAILY_RESTART
+:RESTART_TIMER
 cls
-echo.
-echo  ══════════════════════════════════════
-echo       每日定时重启设置
-echo  ══════════════════════════════════════
-echo.
-set /p daily_time="  请输入每日重启时间 (格式: HH:MM): "
-set /p task_name="  请输入任务名称 (默认: DailyRestart): "
+echo  [定时重启设置]
+set /p seconds="请输入倒计时秒数: "
+shutdown /r /t %seconds%
+echo 系统将在 %seconds% 秒后重启。
+pause
+goto MAIN_MENU
 
-if "%task_name%"=="" set task_name=DailyRestart
+:: ========================================
+:: 休眠模块
+:: ========================================
+:HIBERNATE
+echo 正在进入休眠模式...
+shutdown /h
+goto MAIN_MENU
 
-schtasks /create /tn "%task_name%" /tr "shutdown /r /f" /sc daily /st %daily_time% /f
+:: ========================================
+:: 注销模块
+:: ========================================
+:LOGOFF
+echo 正在注销...
+shutdown /l
+exit
+
+:: ========================================
+:: 颜色设置模块 (新增功能)
+:: ========================================
+:COLOR_SETTINGS
+cls
+echo  [界面颜色设置]
+echo  0: 黑色  1: 蓝色  2: 绿色  3: 水绿  4: 红色
+echo  5: 紫色  6: 黄色  7: 白色  8: 灰色  9: 亮蓝
+echo  A: 亮绿  B: 亮水绿 C: 亮红 D: 亮紫 E: 亮黄 F: 亮白
 echo.
-echo  [√] 已创建每日 %daily_time% 重启任务
-echo.
+set /p bg="背景色代码 (如 0): "
+set /p fg="前景色代码 (如 A): "
+color %bg%%fg%
+echo 颜色已更改！
+timeout /t 2 >nul
+goto MAIN_MENU
+
+:: ========================================
+:: 每日定时任务
+:: ========================================
+:DAILY_TASK
+cls
+echo  [每日定时任务]
+set /p op="操作类型 (s=关机, r=重启): "
+set /p stime="时间 (格式 HH:MM, 如 22:00): "
+if "%op%"=="s" (
+    schtasks /create /tn "DailyShutdown" /tr "shutdown /s /f" /sc daily /st %stime% /f
+    echo 已创建每日 %stime% 关机任务。
+) else (
+    schtasks /create /tn "DailyRestart" /tr "shutdown /r /f" /sc daily /st %stime% /f
+    echo 已创建每日 %stime% 重启任务。
+)
 pause
 goto MAIN_MENU
 
@@ -659,71 +617,12 @@ goto MAIN_MENU
 :: 取消所有任务
 :: ========================================
 :CANCEL_ALL
-cls
-echo.
-echo  ══════════════════════════════════════
-echo         取消所有关机/重启任务
-echo  ══════════════════════════════════════
-echo.
-echo  [1] 取消关机倒计时
-echo  [2] 取消重启倒计时
-echo  [3] 取消所有计划任务
-echo  [4] 返回主菜单
-echo.
-set /p cancel_choice="  请选择: "
-
-if "%cancel_choice%"=="1" (
-    shutdown /a
-    echo.
-    echo  [√] 已取消关机倒计时
-    timeout /t 2 >nul
-    goto MAIN_MENU
-)
-
-if "%cancel_choice%"=="2" (
-    shutdown /a
-    echo.
-    echo  [√] 已取消重启倒计时
-    timeout /t 2 >nul
-    goto MAIN_MENU
-)
-
-if "%cancel_choice%"=="3" (
-    shutdown /a
-    echo.
-    echo  [√] 已取消所有关机/重启倒计时
-    echo.
-    echo  是否要删除所有自定义计划任务？(Y/N)
-    set /p del_tasks="  请选择: "
-    if /i "%del_tasks%"=="Y" (
-        schtasks /delete /tn "DailyShutdown" /f 2>nul
-        schtasks /delete /tn "DailyRestart" /f 2>nul
-        echo  [√] 已删除自定义计划任务
-    )
-    timeout /t 2 >nul
-    goto MAIN_MENU
-)
-
-if "%cancel_choice%"=="4" goto MAIN_MENU
-
-echo  [!] 无效选项
-timeout /t 2 >nul
-goto CANCEL_ALL
-
-:: ========================================
-:: 查看计划任务
-:: ========================================
-:VIEW_TASKS
-cls
-echo.
-echo  ══════════════════════════════════════
-echo         当前计划任务列表
-echo  ══════════════════════════════════════
-echo.
-schtasks /query /fo LIST /v | findstr /i "shutdown restart"
-echo.
-echo  ──────────────────────────────────────
-echo.
+echo 正在取消所有关机/重启倒计时...
+shutdown /a 2>nul
+echo 正在删除计划任务...
+schtasks /delete /tn "DailyShutdown" /f 2>nul
+schtasks /delete /tn "DailyRestart" /f 2>nul
+echo 清理完成。
 pause
 goto MAIN_MENU
 
@@ -732,71 +631,26 @@ goto MAIN_MENU
 :: ========================================
 :SYSTEM_INFO
 cls
-echo.
-echo  ══════════════════════════════════════
-echo            系统信息
-echo  ══════════════════════════════════════
-echo.
-echo  计算机名:     %COMPUTERNAME%
-echo  用户名:       %USERNAME%
-echo  系统目录:     %SYSTEMROOT%
-echo  处理器架构:   %PROCESSOR_ARCHITECTURE%
-echo.
-echo  ──────────────────────────────────────
-echo.
-echo  系统运行时间:
+echo  [系统信息]
+echo  计算机: %COMPUTERNAME%
+echo  用户名: %USERNAME%
+echo  系统目录: %SYSTEMROOT%
 systeminfo | findstr /C:"系统启动时间"
-echo.
-echo  内存信息:
-systeminfo | findstr /C:"可用的物理内存" /C:"虚拟内存"
-echo.
-echo  ──────────────────────────────────────
-echo.
 pause
 goto MAIN_MENU
 
 :: ========================================
-:: 退出程序
+:: 退出
 :: ========================================
 :EXIT_PROGRAM
-cls
-echo.
-echo  ╔══════════════════════════════════════════════════════╗
-echo  ║                                                      ║
-echo  ║           感谢使用 Windows 自动化开关机程序          ║
-echo  ║                                                      ║
-echo  ║           GitHub: https://github.com/...             ║
-echo  ║                                                      ║
-echo  ╚══════════════════════════════════════════════════════╝
-echo.
-timeout /t 2 >nul
 exit</pre>
       </div>
     </div>
     
-    <!-- Additional Files -->
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="code-block rounded-xl p-6">
-        <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-          <i class="fab fa-github text-terminal-green"></i>
-          README.md
-        </h4>
-        <p class="text-gray-400 text-sm mb-4">GitHub 项目说明文档</p>
-        <button onclick="copyReadme()" class="copy-btn px-4 py-2 rounded-lg bg-terminal-surface border border-terminal-border text-terminal-cyan hover:border-terminal-cyan/50 transition-all text-sm">
-          <i class="fas fa-copy mr-2"></i>复制 README
+    <div class="mt-8 text-center">
+        <button onclick="downloadSourceFile()" class="px-8 py-4 rounded-xl bg-gradient-to-r from-terminal-purple to-terminal-cyan text-white font-semibold hover:opacity-90 transition-all shadow-lg">
+            <i class="fas fa-file-download mr-2"></i>一键下载完整脚本文件
         </button>
-      </div>
-      
-      <div class="code-block rounded-xl p-6">
-        <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-          <i class="fas fa-file-code text-terminal-yellow"></i>
-          LICENSE
-        </h4>
-        <p class="text-gray-400 text-sm mb-4">MIT 开源许可证</p>
-        <button onclick="copyLicense()" class="copy-btn px-4 py-2 rounded-lg bg-terminal-surface border border-terminal-border text-terminal-yellow hover:border-terminal-yellow/50 transition-all text-sm">
-          <i class="fas fa-copy mr-2"></i>复制 LICENSE
-        </button>
-      </div>
     </div>
   </div>
 </section>
@@ -805,18 +659,18 @@ exit</pre>
 <section id="faq" class="py-24 px-4 bg-terminal-surface/30">
   <div class="max-w-4xl mx-auto">
     <div class="text-center mb-16">
-      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">常见问题</h2>
-      <p class="text-gray-400 text-lg">解答你可能遇到的问题</p>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">常见问题 FAQ</h2>
+      <p class="text-gray-400 text-lg">遇到问题？这里或许有答案</p>
     </div>
     
     <div class="space-y-4" id="faqContainer">
-      <!-- FAQ Items will be rendered by JS -->
+      <!-- Rendered by JS -->
     </div>
   </div>
 </section>
 
 <!-- Footer -->
-<footer class="py-12 px-4 border-t border-terminal-border">
+<footer class="py-12 px-4 border-t border-terminal-border dark:bg-terminal-bg">
   <div class="max-w-7xl mx-auto">
     <div class="flex flex-col md:flex-row items-center justify-between gap-6">
       <div class="flex items-center gap-3">
@@ -824,79 +678,80 @@ exit</pre>
           <i class="fas fa-terminal text-white"></i>
         </div>
         <div>
-          <div class="font-semibold text-white">AutoShutdown</div>
-          <div class="text-sm text-gray-500">Windows 自动化开关机程序</div>
+          <div class="font-semibold text-white">AutoShutdown v2.5</div>
+          <div class="text-sm text-gray-500">Build with ♥ & Tailwind CSS</div>
         </div>
       </div>
       
-      <div class="flex items-center gap-6">
-        <a href="#" class="text-gray-400 hover:text-terminal-green transition-colors">
-          <i class="fab fa-github text-xl"></i>
-        </a>
-        <a href="#" class="text-gray-400 hover:text-terminal-cyan transition-colors">
-          <i class="fas fa-envelope text-xl"></i>
-        </a>
-      </div>
-      
       <div class="text-sm text-gray-500">
-        Made with <span class="text-terminal-red">♥</span> for Windows Users
+        Designed for Windows Users. Open Source Project.
       </div>
     </div>
   </div>
 </footer>
 
 <!-- Toast Notification -->
-<div id="toast" class="fixed bottom-8 right-8 px-6 py-3 rounded-xl bg-terminal-green text-white font-medium shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+<div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-xl bg-terminal-green text-white font-medium shadow-lg translate-y-20 opacity-0 transition-all duration-300 z-50">
   <i class="fas fa-check-circle mr-2"></i>
-  <span id="toastMessage">复制成功</span>
+  <span id="toastMessage">操作成功</span>
 </div>
 
+<!-- Back to Top Button -->
+<button id="backToTop" class="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-terminal-cyan text-white shadow-lg hidden items-center justify-center hover:bg-terminal-cyan/80 transition-all z-40">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
 <script>
-// FAQ Data
+// ==================== 数据定义 ====================
 const faqData = [
   {
-    question: "为什么需要管理员权限？",
-    answer: "部分系统操作（如关机、重启、修改计划任务）需要管理员权限才能执行。脚本会自动检测并请求权限提升。"
-  },
-  {
-    question: "如何取消已设置的定时任务？",
-    answer: "运行脚本后选择选项 [8] 取消所有任务，或使用命令 shutdown /a 取消倒计时，使用 schtasks /delete /tn \"任务名\" 删除计划任务。"
-  },
-  {
-    question: "脚本可以在 Windows 11 上运行吗？",
-    answer: "是的，脚本完全兼容 Windows 7/8/10/11 所有版本，包括 32 位和 64 位系统。"
-  },
-  {
-    question: "如何设置开机自动运行脚本？",
-    answer: "将脚本快捷方式放入启动文件夹（Win+R 输入 shell:startup），或通过任务计划程序创建开机触发器。"
+    question: "为什么运行后闪退或没有反应？",
+    answer: "本脚本涉及系统关键操作，必须以【管理员身份运行】。请右键点击脚本文件，选择'以管理员身份运行'。"
   },
   {
     question: "为什么休眠功能不可用？",
-    answer: "请确保系统已启用休眠功能。以管理员身份运行命令：powercfg /hibernate on 来启用休眠。"
+    answer: "部分系统默认关闭休眠功能。请在CMD中运行 powercfg /hibernate on 开启休眠功能。"
   },
   {
-    question: "如何修改脚本中的默认设置？",
-    answer: "右键点击脚本文件选择编辑，可以直接修改脚本中的默认值，如默认倒计时时间、任务名称等。"
+    question: "生成的命令在哪里运行？",
+    answer: "按 Win+R 打开运行窗口，或搜索 'cmd' 打开命令提示符，粘贴命令后回车即可执行。"
+  },
+  {
+    question: "如何查看当前是否设置了定时任务？",
+    answer: "在脚本菜单中选择 [7] 取消所有任务，或者在CMD中输入 'schtasks /query' 查看。"
+  },
+  {
+    question: "脚本支持 Windows 11 吗？",
+    answer: "完全支持。本脚本兼容 Windows 7/8/10/11 以及 Windows Server 版本。"
   }
 ];
 
-// Render FAQ
+// ==================== 初始化 ====================
+document.addEventListener('DOMContentLoaded', () => {
+    renderFAQ();
+    initTheme();
+    initScrollEffects();
+    initGeneratorListeners();
+});
+
+// ==================== 功能函数 ====================
+
+// FAQ 渲染
 function renderFAQ() {
   const container = document.getElementById('faqContainer');
   container.innerHTML = faqData.map((item, index) => `
-    <div class="faq-item bg-terminal-surface rounded-xl border border-terminal-border overflow-hidden">
-      <button class="faq-toggle w-full px-6 py-4 flex items-center justify-between text-left hover:bg-terminal-border/30 transition-colors" onclick="toggleFAQ(${index})">
-        <span class="font-medium text-white">${item.question}</span>
-        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300" id="faqIcon${index}"></i>
+    <div class="faq-item card-surface rounded-xl border border-terminal-border overflow-hidden">
+      <button class="faq-toggle w-full px-6 py-4 flex items-center justify-between text-left hover:bg-terminal-surface/50 transition-colors" onclick="toggleFAQ(${index})">
+        <span class="font-medium text-white pr-4">${item.question}</span>
+        <i class="fas fa-chevron-down text-gray-500 transition-transform duration-300" id="faqIcon${index}"></i>
       </button>
-      <div class="faq-content px-6 pb-4 hidden" id="faqContent${index}">
-        <p class="text-gray-400 leading-relaxed">${item.answer}</p>
+      <div class="faq-content px-6 pb-4 hidden text-gray-400 text-sm leading-relaxed" id="faqContent${index}">
+        ${item.answer}
       </div>
     </div>
   `).join('');
 }
 
-// Toggle FAQ
 function toggleFAQ(index) {
   const content = document.getElementById(`faqContent${index}`);
   const icon = document.getElementById(`faqIcon${index}`);
@@ -910,88 +765,7 @@ function toggleFAQ(index) {
   }
 }
 
-// Copy Code
-document.getElementById('copyBtn').addEventListener('click', function() {
-  const code = document.getElementById('codeContent').textContent;
-  navigator.clipboard.writeText(code).then(() => {
-    showToast('代码已复制到剪贴板');
-  });
-});
-
-// Copy README
-function copyReadme() {
-  const readme = `# Windows 自动化开关机程序
-
-一个功能强大的 Windows 批处理脚本，支持定时关机、重启、休眠、注销等多种操作。
-
-## 功能特性
-
-- 定时关机/重启（倒计时或指定时间）
-- 系统休眠/睡眠模式
-- 用户注销
-- 每日定时任务
-- 任务计划管理
-- 系统信息显示
-- 管理员权限自动检测
-
-## 使用方法
-
-1. 下载 \`AutoShutdown.bat\` 文件
-2. 右键选择"以管理员身份运行"
-3. 根据菜单提示选择操作
-
-## 系统要求
-
-- Windows 7/8/10/11
-- 管理员权限（部分功能需要）
-
-## 许可证
-
-MIT License
-
-## 贡献
-
-欢迎提交 Issue 和 Pull Request！
-
-## 作者
-
-Your Name - [GitHub](https://github.com/yourusername)`;
-  
-  navigator.clipboard.writeText(readme).then(() => {
-    showToast('README 已复制到剪贴板');
-  });
-}
-
-// Copy License
-function copyLicense() {
-  const license = `MIT License
-
-Copyright (c) 2024 Your Name
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.`;
-  
-  navigator.clipboard.writeText(license).then(() => {
-    showToast('LICENSE 已复制到剪贴板');
-  });
-}
-
-// Show Toast
+// Toast 显示
 function showToast(message) {
   const toast = document.getElementById('toast');
   const toastMessage = document.getElementById('toastMessage');
@@ -1003,52 +777,235 @@ function showToast(message) {
   }, 3000);
 }
 
-// Mobile Menu
+// ==================== 生成器逻辑 ====================
+let generatedCmd = ''; // 存储生成的命令
+
+function initGeneratorListeners() {
+    const radios = document.querySelectorAll('input[name="timeType"]');
+    radios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const label = document.getElementById('timeInputLabel');
+            const input = document.getElementById('genTime');
+            const helper = document.getElementById('timeHelperText');
+            
+            if(this.value === 'seconds') {
+                label.textContent = '倒计时秒数';
+                input.placeholder = '例如: 3600 (1小时)';
+                helper.classList.remove('hidden');
+            } else {
+                label.textContent = '指定时间';
+                input.placeholder = '格式: HH:MM (如 22:30)';
+                helper.classList.add('hidden');
+            }
+        });
+    });
+}
+
+function generateCommand() {
+    const opSelect = document.getElementById('genOperation');
+    const timeType = document.querySelector('input[name="timeType"]:checked').value;
+    const timeVal = document.getElementById('genTime').value;
+    const isForce = document.getElementById('genForce').checked;
+    const explanationBox = document.getElementById('commandExplanation');
+    const explanationText = document.getElementById('explanationText');
+
+    if(!timeVal) {
+        showToast('请输入时间参数');
+        return;
+    }
+
+    let opCmd = '';
+    let explanation = '';
+    const forceFlag = isForce ? ' /f' : '';
+
+    switch(opSelect.value) {
+        case 'shutdown':
+            opCmd = '-s';
+            explanation = '这将关闭计算机。';
+            break;
+        case 'restart':
+            opCmd = '-r';
+            explanation = '这将重新启动计算机。';
+            break;
+        case 'hibernate':
+            opCmd = '-h';
+            explanation = '这将保存当前状态并进入休眠。';
+            break;
+        case 'logoff':
+            opCmd = '-l';
+            explanation = '这将注销当前用户。';
+            break;
+    }
+
+    let finalCmd = '';
+    
+    if (opSelect.value === 'hibernate' || opSelect.value === 'logoff') {
+        // 休眠和注销通常不涉及时间参数（at命令可用于计划，但shutdown命令本身参数不同）
+        // 这里简化处理：如果是休眠/注销，直接执行或配合at
+        if(timeType === 'specific') {
+            finalCmd = `at ${timeVal} shutdown ${opCmd}${forceFlag}`;
+        } else {
+            // 倒计时休眠需要timeout配合，这里仅输出直接执行命令或简单的shutdown
+            // 为防止混淆，这里仅输出核心命令
+            if(opSelect.value === 'logoff') {
+                finalCmd = `shutdown ${opCmd}`;
+                explanation += ' 注销通常不需要倒计时，将立即执行。';
+            } else {
+                // 休眠倒计时
+                finalCmd = `timeout /t ${timeVal} && shutdown ${opCmd}`;
+                explanation = `等待 ${timeVal} 秒后执行操作。`;
+            }
+        }
+    } else {
+        // 关机与重启
+        if(timeType === 'seconds') {
+            finalCmd = `shutdown ${opCmd} -t ${timeVal}${forceFlag}`;
+            explanation += ` 计算机将在 ${timeVal} 秒后执行操作。`;
+        } else {
+            // 指定时间使用 at 命令 (虽然at已弃用，但在简单场景仍可用，或建议schtasks)
+            // 为了用户友好，这里使用 at
+            finalCmd = `at ${timeVal} shutdown ${opCmd}${forceFlag}`;
+            explanation += ` 任务已计划在 ${timeVal} 执行。`;
+        }
+    }
+
+    generatedCmd = finalCmd;
+    document.getElementById('generatedCodeOutput').textContent = finalCmd;
+    
+    explanationText.textContent = explanation;
+    explanationBox.classList.remove('hidden');
+}
+
+function copyGeneratedCommand() {
+    if(!generatedCmd) {
+        showToast('请先生成命令');
+        return;
+    }
+    navigator.clipboard.writeText(generatedCmd).then(() => {
+        showToast('命令已复制，按 Win+R 粘贴运行');
+    });
+}
+
+function downloadBatFile() {
+    if(!generatedCmd) {
+        showToast('请先生成命令');
+        return;
+    }
+    
+    // 创建一个简单的批处理文件内容
+    const content = `@echo off\necho 正在执行自动化任务...\n${generatedCmd}\necho 任务已设置完成。\npause`;
+    
+    const blob = new Blob([content], { type: 'application/bat' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'QuickTask.bat';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showToast('脚本文件已开始下载');
+}
+
+// ==================== 其他功能 ====================
+
+// 复制完整源码
+document.getElementById('copyCodeBtn').addEventListener('click', function() {
+    const code = document.getElementById('fullCodeContent').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+        showToast('完整代码已复制');
+    });
+});
+
+// 下载完整源码
+function downloadSourceFile() {
+    const code = document.getElementById('fullCodeContent').textContent;
+    const blob = new Blob([code], { type: 'application/bat' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'AutoShutdown_v2.5.bat';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('完整脚本已下载');
+}
+
+// 移动端菜单
 document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-  document.getElementById('mobileMenu').classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.remove('hidden');
+    menu.classList.add('flex');
 });
 
 function closeMobileMenu() {
-  document.getElementById('mobileMenu').classList.add('hidden');
-  document.body.style.overflow = '';
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.add('hidden');
+    menu.classList.remove('flex');
 }
 
-// Smooth Scroll
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+// 主题切换
+function initTheme() {
+    const toggle = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+    
+    // Check local storage
+    if(localStorage.getItem('theme') === 'light') {
+        document.body.classList.remove('dark-mode');
+        document.body.classList.add('light-mode');
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
     }
-  });
-});
 
-// Initialize
-renderFAQ();
+    toggle.addEventListener('click', () => {
+        if(document.body.classList.contains('dark-mode')) {
+            document.body.classList.remove('dark-mode');
+            document.body.classList.add('light-mode');
+            localStorage.setItem('theme', 'light');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        } else {
+            document.body.classList.remove('light-mode');
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
+        }
+    });
+}
 
-// Scroll Animation
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: '0px 0px -50px 0px'
-};
+// 滚动效果
+function initScrollEffects() {
+    const backToTop = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 500) {
+            backToTop.classList.remove('hidden');
+            backToTop.classList.add('flex');
+        } else {
+            backToTop.classList.add('hidden');
+            backToTop.classList.remove('flex');
+        }
+    });
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.style.opacity = '1';
-      entry.target.style.transform = 'translateY(0)';
-    }
-  });
-}, observerOptions);
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
-document.querySelectorAll('.feature-card, .code-block').forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(20px)';
-  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-  observer.observe(el);
-});
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if(target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+}
+
 </script>
 </body>
 </html>
