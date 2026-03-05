@@ -1,165 +1,324 @@
-# 🖥️ Windows 自动化开关机工具 | 新手零门槛一键搞定系统定时任务
+<div align="center">
 
-![GitHub stars](https://img.shields.io/github/stars/badhope/AutoShutdown?style=social)
-![GitHub forks](https://img.shields.io/github/forks/badhope/AutoShutdown?style=social)
-![GitHub issues](https://img.shields.io/github/issues/badhope/AutoShutdown)
-![GitHub license](https://img.shields.io/github/license/badhope/AutoShutdown)
-![Windows](https://img.shields.io/badge/Windows_7/8/10/11-00A4EF?style=flat-square&logo=windows&logoColor=white)
-![Batch](https://img.shields.io/badge/Batch脚本-4D4D4D?style=flat-square&logo=windows-terminal&logoColor=white)
-![零代码](https://img.shields.io/badge/零代码_新手友好-32CD32?style=flat-square&logo=easy&logoColor=white)
+# � AutoBat
 
----
+### �🖥️ Windows 批处理脚本专业下载中心
 
-> 嗨，新手小伙伴！是不是总遇到这些头疼的问题：
-> - 挂机下载大文件、渲染视频，不想熬夜等结束手动关电脑？
-> - 想限制孩子用电脑的时间，却不知道怎么设置定时强制关机？
-> - 家里的Windows服务器/软路由长期开着，想定期重启清理内存，又不会写命令？
-> - 网上找的定时关机教程要输复杂代码，怕输错一个字母就搞坏系统？
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=28&duration=3000&pause=1000&color=3FB950&center=true&vCenter=true&width=600&lines=45%2B+%E5%AE%9E%E7%94%A8%E8%84%9A%E6%9C%AC;8+%E5%A4%A7%E5%8A%9F%E8%83%BD%E5%88%86%E7%B1%BB;100%25+%E5%AE%89%E5%85%A8%E5%BC%80%E6%BA%90" alt="Typing SVG" />
 
-别慌！这个工具就是专门为你打造的**零门槛Windows系统自动化控制神器**。不用懂代码、不用装软件、不用复杂设置，点点鼠标就能搞定定时关机、重启、休眠等所有操作，小白也能1分钟上手！
+<p align="center">
+  <em>一键下载 · 即开即用 · 安全可靠 · 持续更新</em>
+</p>
 
----
+<p align="center">
+  <a href="#-功能特性">功能特性</a> •
+  <a href="#-脚本分类">脚本分类</a> •
+  <a href="#-快速开始">快速开始</a> •
+  <a href="#-使用教程">使用教程</a> •
+  <a href="#-常见问题">常见问题</a>
+</p>
 
-## ✨ 这个工具能帮你做什么？（新手必看）
-这是一套专为Windows系统打造的自动化开关机解决方案，包含两大核心模块，完美覆盖新手所有需求：
-1.  **可视化命令生成器**：完全不用写代码，选几个选项就能自动生成命令，复制粘贴就能用
-2.  **一键全能脚本**：一个15KB的小文件，下载后双击就能用，内置全功能菜单，点点数字就能完成所有操作
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
-核心功能全览，新手也能一眼看懂：
-| 核心功能 | 新手能用来干嘛 |
-|----------|----------------|
-| 智能定时关机 | 倒计时/指定时间关机，挂机下载、渲染再也不用熬夜守电脑 |
-| 定时重启 | 每天固定时间重启电脑/服务器，自动清理内存，让系统一直流畅 |
-| 系统休眠/注销 | 下班忘关电脑？设置固定时间自动休眠，省电又保护隐私 |
-| 每日重复任务 | 一键创建每天固定时间的关机/重启任务，家长控制、服务器维护超方便 |
-| 一键取消所有任务 | 输错了、不想执行了？一键清空所有定时任务，完全不怕误操作 |
-| 界面自定义 | 不喜欢默认的黑底绿字？一键切换配色，打造自己喜欢的界面风格 |
+</div>
 
 ---
 
-## 🚀 超详细新手教程 | 跟着走，1分钟就能学会
-我们准备了两条新手路线，**完全零代码的路线1优先推荐**，怕麻烦想一劳永逸的选路线2，两条都超简单！
+## 📊 项目概览
 
-### 路线一：零代码可视化命令生成器（首选！完全不用碰代码）
-不用下载任何东西，打开网页就能用，30秒生成你需要的命令，复制就能用！
+<div align="center">
 
-#### 步骤1：打开工具网站
-访问官方地址：[Windows自动化开关机增强控制中心](https://badhope.github.io/AutoShutdown/)，直接进入可视化命令生成器区域。
+| 📦 脚本数量 | 📁 功能分类 | 🔒 安全检测 | 💰 使用费用 |
+|:---:|:---:|:---:|:---:|
+| <img src="https://img.shields.io/badge/45%2B-脚本-green?style=for-the-badge&logo=windows-terminal&logoColor=white" alt="脚本数量"/> | <img src="https://img.shields.io/badge/8-分类-blue?style=for-the-badge&logo=folder&logoColor=white" alt="功能分类"/> | <img src="https://img.shields.io/badge/100%25-安全-brightgreen?style=for-the-badge&logo=shield&logoColor=white" alt="安全检测"/> | <img src="https://img.shields.io/badge/免费-开源-success?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="使用费用"/> |
 
-#### 步骤2：选择你要做的操作
-在「操作类型」下拉框里，选择你需要的功能：
-- 想定时关电脑，就选「定时关机」
-- 想定时重启电脑，就选「定时重启」
-- 想让电脑定时休眠，就选「系统休眠」
+</div>
 
-#### 步骤3：设置时间模式
-有两种时间模式，选你需要的就行，新手推荐用倒计时模式，更不容易出错：
-- **倒计时模式**：比如想3小时后关机，就选`seconds 倒计时(秒)`，然后在输入框里填数字
-  - 给新手准备好常用数值，直接抄：30分钟=1800，1小时=3600，2小时=7200，3小时=10800
-- **指定时间模式**：比如想晚上23:00准时关机，就选`specific 指定时间`，然后输入23:00就行
+---
 
-#### 步骤4：可选设置（新手建议勾选）
-勾选「强制关闭应用程序」，这样到时间就算有软件没关、弹窗没确认，也能正常执行关机/重启，不会因为软件卡住导致任务失败。
+## ✨ 功能特性
 
-#### 步骤5：复制生成好的命令
-设置完之后，「生成结果」框里会自动出现你需要的命令，直接全选复制就行。
+<table>
+<tr>
+<td width="50%">
 
-#### 步骤6：运行命令，完成设置
-这里教新手2种最简单的运行方法，任选一种就行：
-1.  **运行窗口法（最快）**：按下键盘上的 `Win+R` 组合键，会弹出一个小窗口，把复制的命令粘贴进去，按回车，就设置成功了！
-2.  **命令提示符法**：在电脑左下角搜索框里输入`cmd`，找到「命令提示符」，打开后粘贴命令，按回车，就完成了。
+### 🎯 核心功能
 
-### 路线二：一键全能脚本（一劳永逸，下载一次永久用）
-不想每次都开网页？直接下载这个bat脚本，放在电脑里，随时想用就点开，全功能菜单，不用输任何代码。
+- 🔍 **智能搜索** - 快速定位所需脚本
+- 📂 **分类筛选** - 8大分类清晰明了
+- 🏷️ **标签系统** - 精准匹配使用场景
+- 👁️ **代码预览** - 语法高亮，一目了然
+- ⬇️ **一键下载** - 即刻获取 .bat 文件
+- 🌓 **主题切换** - 深色/浅色自由选择
 
-#### 步骤1：下载脚本
-打开网站，找到「AutoShutdown_v2.5.bat」下载区域，点击下载，把脚本保存到你的电脑里（建议放在桌面，好找）。
+</td>
+<td width="50%">
 
-#### 步骤2：关键！以管理员身份运行
-划重点：这个脚本要修改系统定时任务，**必须用管理员身份运行**，不然会闪退/没效果！
-操作方法：右键点击下载好的`AutoShutdown_v2.5.bat`文件，在弹出的菜单里选择「以管理员身份运行」，在弹出的确认窗口里点「是」，就打开脚本了。
+### 🛡️ 安全保障
 
-#### 步骤3：菜单操作，点点数字就搞定
-打开脚本后，会出现全功能主菜单，你只需要输入对应功能前面的数字，按回车，就能进入对应功能：
+- ✅ 所有脚本经过人工审核
+- ✅ 代码完全透明可查看
+- ✅ 不含恶意代码或病毒
+- ✅ 详细的使用说明和警告
+- ✅ 安全等级标识系统
+- ✅ 开源免费，持续维护
+
+</td>
+</tr>
+</table>
+
+---
+
+## 📂 脚本分类
+
+<div align="center">
+
+| 分类 | 图标 | 脚本数量 | 描述 |
+|:---:|:---:|:---:|:---|
+| **系统管理** | ⚙️ | 8个 | 定时关机、进程管理、服务管理等 |
+| **文件操作** | 📁 | 9个 | 批量重命名、文件复制、清理等 |
+| **网络工具** | 🌐 | 6个 | 网络诊断、IP切换、WiFi密码等 |
+| **系统优化** | 🚀 | 5个 | 垃圾清理、磁盘分析、启动项等 |
+| **安全工具** | 🔐 | 2个 | 文件加密、文件粉碎等 |
+| **备份恢复** | 💾 | 4个 | 文件备份、注册表备份等 |
+| **开发工具** | 💻 | 1个 | 环境变量管理等 |
+| **多媒体工具** | 🎨 | 3个 | 截图、格式转换、水印等 |
+
+</div>
+
+---
+
+## 🔥 热门脚本推荐
+
+<div align="center">
+
+| 脚本名称 | 功能描述 | 安全等级 |
+|:---|:---|:---:|
+| ⏰ **定时关机助手** | 设置倒计时自动关机，支持取消操作 | 🟢 安全 |
+| 🔄 **定时重启工具** | 设置系统定时重启，适用于服务器维护 | 🟢 安全 |
+| 📋 **进程管理器** | 查看和管理系统进程，排查问题程序 | 🟡 注意 |
+| 🧹 **系统垃圾清理** | 清理临时文件、缓存，释放磁盘空间 | 🟡 注意 |
+| 📶 **WiFi密码查看** | 查看已连接过的WiFi网络密码 | 🟢 安全 |
+| 🔒 **文件夹加密工具** | 使用系统功能隐藏并加密文件夹 | 🔴 危险 |
+
+</div>
+
+---
+
+## 🚀 快速开始
+
+### 📋 环境要求
+
 ```
-[1] 定时关机 → 输入倒计时秒数，就能设置定时关机
-[2] 定时重启 → 输入倒计时秒数，设置定时重启
-[3] 系统休眠 → 按回车，电脑立刻进入休眠
-[4] 用户注销 → 按回车，立刻注销当前用户
-[5] 设置界面颜色 → 自定义脚本的背景和文字颜色
-[6] 每日定时任务 → 一键创建每天固定时间的关机/重启任务
-[7] 取消所有任务 → 一键清空所有定时关机/重启任务，不怕误操作
-[8] 系统信息 → 查看电脑的启动时间、用户名等基础信息
-[0] 退出程序 → 关闭脚本
-```
-
-#### 步骤4：按提示操作，完成设置
-比如你想设置3小时后关机，就输入`1`，按回车，然后输入`10800`，再按回车，就设置成功了！全程不用写任何代码，跟着提示输数字就行。
-
----
-
-## 📋 新手常用场景 | 直接抄作业
-给新手整理了最常用的场景，直接用就行，不用自己琢磨：
-
-### 场景1：挂机下载/视频渲染，3小时后自动关机
-- 可视化生成器：操作类型选「定时关机」，倒计时填`10800`，勾选强制关闭程序，复制命令运行即可
-- 脚本：输入`1`回车，输入`10800`回车，完成设置
-
-### 场景2：家长控制，每天晚上22:00强制关机
-- 脚本：输入`6`回车，操作类型输入`s`回车，时间输入`22:00`回车，一键创建每日定时关机任务
-
-### 场景3：家庭服务器维护，每天凌晨4点自动重启
-- 脚本：输入`6`回车，操作类型输入`r`回车，时间输入`04:00`回车，完成每日重启任务设置
-
-### 场景4：办公电脑节能，工作日18:00自动休眠
-用可视化生成器，直接复制下面的命令，Win+R粘贴运行即可：
-```
-schtasks /create /tn "OfficeSave" /tr "shutdown /h" /sc weekly /d MON,TUE,WED,THU,FRI /st 18:00
+操作系统: Windows 7/8/10/11 或 Windows Server
+浏览器: Chrome, Firefox, Edge, Safari 等现代浏览器
+权限: 部分脚本需要管理员权限
 ```
 
-### 场景5：取消所有定时任务，不想执行了怎么办？
-- 方法1：脚本里输入`7`回车，一键清空所有任务
-- 方法2：Win+R打开运行，输入`shutdown /a`回车，立刻取消当前倒计时任务
+### 🛠️ 本地部署
+
+```bash
+# 克隆仓库
+git clone https://github.com/badhope/AutoBat.git
+
+# 进入项目目录
+cd AutoBat
+
+# 方式一：直接打开 index.html
+# 双击 index.html 文件即可在浏览器中打开
+
+# 方式二：使用本地服务器
+python -m http.server 8080
+# 访问 http://localhost:8080
+```
+
+### 📁 项目结构
+
+```
+AutoBat/
+├── 📄 index.html          # 主页面
+├── 📁 css/
+│   └── 🎨 styles.css      # 样式文件
+├── 📁 js/
+│   ├── 📊 data.js         # 脚本数据
+│   └── ⚙️ app.js          # 应用逻辑
+├── 📖 README.md           # 项目说明
+└── 📜 LICENSE             # 开源协议
+```
 
 ---
 
-## ❌ 新手常见问题避坑指南
-这里整理了99%的新手会遇到的问题，看完再也不怕踩坑！
+## 📖 使用教程
 
-### 1. 脚本双击打开后闪退，没反应？
-**原因**：没有用管理员身份运行，系统不给权限修改定时任务。
-**解决方法**：右键脚本文件，选择「以管理员身份运行」，就正常了。
+<div align="center">
 
-### 2. 设置了定时关机，到时间没反应？
-**原因1**：没勾选强制关闭程序，有软件弹窗阻止了关机。
-**解决方法**：设置的时候勾选「强制关闭应用程序」，确保能正常执行。
-**原因2**：电脑睡眠/锁屏了，任务没触发。
-**解决方法**：在电脑的电源设置里，关闭自动睡眠，只关闭屏幕就行。
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=500&color=58A6FF&center=true&vCenter=true&width=400&lines=Step+1%3A+%E4%B8%8B%E8%BD%BD%E8%84%9A%E6%9C%AC;Step+2%3A+%E6%9F%A5%E7%9C%8B%E4%BB%A3%E7%A0%81;Step+3%3A+%E8%BF%90%E8%A1%8C%E8%84%9A%E6%9C%AC;Step+4%3A+%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9" alt="Tutorial Steps" />
 
-### 3. 休眠功能用不了，点击没反应？
-**原因**：你的Windows系统默认关闭了休眠功能。
-**解决方法**：以管理员身份打开CMD，输入`powercfg /hibernate on`，按回车，就能开启休眠功能了。
+</div>
 
-### 4. 怎么看我当前设置了哪些定时任务？
-- 简单方法：脚本里输入`7`，会自动清理所有任务，不用一个个查
-- 详细方法：以管理员身份打开CMD，输入`schtasks /query`，就能看到所有系统定时任务
+<table>
+<tr>
+<td width="25%" align="center">
 
-### 5. 这个脚本支持我的系统吗？
-完全支持！脚本兼容Windows 7、Windows 8、Windows 10、Windows 11，以及Windows Server全系列服务器系统，32位/64位都能用。
+### 1️⃣ 下载脚本
 
-### 6. 这个脚本安全吗？会不会有病毒？
-绝对安全！脚本是完全开源的，网站里贴出了完整的源码，你可以逐行查看，没有任何恶意代码，只有纯纯的系统功能调用，不会修改你的任何系统文件，放心用。
+在脚本库中找到需要的脚本，点击 **"下载"** 按钮保存 `.bat` 文件
+
+</td>
+<td width="25%" align="center">
+
+### 2️⃣ 查看代码
+
+点击 **"查看代码"** 了解脚本功能，确保代码安全
+
+</td>
+<td width="25%" align="center">
+
+### 3️⃣ 运行脚本
+
+- **普通脚本**：双击运行
+- **管理员脚本**：右键 → 以管理员身份运行
+
+</td>
+<td width="25%" align="center">
+
+### 4️⃣ 注意事项
+
+- 执行前备份重要数据
+- 仔细阅读脚本说明
+- 不确定时先在虚拟机测试
+
+</td>
+</tr>
+</table>
 
 ---
 
-## 🤝 开源与反馈
-这个项目是完全开源的Windows工具，欢迎所有小伙伴一起完善它！
-- 如果你有新的功能建议、发现了bug，都可以在仓库提交Issue或PR
-- 如果你有使用上的问题、优化建议，也可以发送邮件到：**x18825407105@outlook.com**
+## ❓ 常见问题
+
+<details>
+<summary><b>🔧 为什么运行后闪退或没有反应？</b></summary>
+<br>
+
+部分脚本需要管理员权限。请右键点击脚本文件，选择 **"以管理员身份运行"**。另外，某些杀毒软件可能会阻止脚本运行，请检查杀毒软件设置。
+
+</details>
+
+<details>
+<summary><b>🔍 如何查看脚本是否安全？</b></summary>
+<br>
+
+点击 **"查看代码"** 按钮可以查看完整源代码。所有代码都是透明的，您可以确认没有恶意操作后再执行。
+
+</details>
+
+<details>
+<summary><b>💻 脚本支持哪些Windows版本？</b></summary>
+<br>
+
+大部分脚本兼容 **Windows 7/8/10/11** 以及 **Windows Server** 版本。部分功能可能需要特定版本支持。
+
+</details>
+
+<details>
+<summary><b>❌ 如何取消已设置的定时任务？</b></summary>
+<br>
+
+可以使用 **"定时任务管理"** 工具查看和删除已创建的计划任务，或者在命令行运行：
+```cmd
+schtasks /delete /tn 任务名 /f
+```
+
+</details>
+
+<details>
+<summary><b>🔄 脚本执行后如何恢复？</b></summary>
+<br>
+
+建议在执行前创建系统还原点或备份重要数据。对于修改系统设置的脚本，可以使用系统还原功能恢复。
+
+</details>
 
 ---
 
-## 💬 给新手的最后一句话
-不用再羡慕别人会用代码搞定电脑定时任务，也不用再熬夜守着电脑等下载结束，更不用为孩子沉迷电脑头疼。这个小工具，就是帮你把繁琐的电脑操作变简单，解放你的时间和精力。
+## 🏷️ 技术栈
 
-希望这个工具能帮你轻松搞定Windows系统自动化操作，再也不用为开关机这点小事烦心啦！
+<div align="center">
+
+<img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"/>
+<img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3"/>
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"/>
+<img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS"/>
+<img src="https://img.shields.io/badge/Batch-4D4D4D?style=for-the-badge&logo=windows-terminal&logoColor=white" alt="Batch"/>
+
+</div>
+
+---
+
+## 📈 项目统计
+
+<div align="center">
+
+<img src="https://img.shields.io/github/stars/badhope/AutoBat?style=social" alt="GitHub stars"/>
+<img src="https://img.shields.io/github/forks/badhope/AutoBat?style=social" alt="GitHub forks"/>
+<img src="https://img.shields.io/github/watchers/badhope/AutoBat?style=social" alt="GitHub watchers"/>
+
+<br><br>
+
+<img src="https://img.shields.io/github/issues/badhope/AutoBat" alt="GitHub issues"/>
+<img src="https://img.shields.io/github/issues-closed/badhope/AutoBat" alt="GitHub closed issues"/>
+<img src="https://img.shields.io/github/issues-pr/badhope/AutoBat" alt="GitHub pull requests"/>
+<img src="https://img.shields.io/github/license/badhope/AutoBat" alt="GitHub license"/>
+<img src="https://img.shields.io/github/last-commit/badhope/AutoBat" alt="GitHub last commit"/>
+
+</div>
+
+---
+
+## 🤝 贡献指南
+
+欢迎所有形式的贡献！如果您想为项目做出贡献：
+
+1. 🍴 Fork 本仓库
+2. 🌿 创建您的特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 💾 提交您的更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 📤 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 🎉 打开一个 Pull Request
+
+---
+
+## 📜 开源协议
+
+本项目基于 **MIT License** 开源协议。
+
+<div align="center">
+
+<img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License"/>
+
+</div>
+
+---
+
+## 📬 联系方式
+
+<div align="center">
+
+| 📧 Email | 🐙 GitHub | 💬 反馈 |
+|:---:|:---:|:---:|
+| [x18825407105@outlook.com](mailto:x18825407105@outlook.com) | [badhope/AutoBat](https://github.com/badhope/AutoBat) | [提交 Issue](https://github.com/badhope/AutoBat/issues) |
+
+</div>
+
+---
+
+<div align="center">
+
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
+
+### ⭐ 如果这个项目对您有帮助，请给一个 Star 支持一下！⭐
+
+**Made with ❤️ by AutoBat Team**
+
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=400&size=14&duration=2000&pause=1000&color=6E7681&center=true&vCenter=true&width=400&lines=Thank+you+for+your+support!;Star+%E2%9C%A8+Fork+%E2%9E%A1%EF%B8%8F+Contribute" alt="Thank You" />
+
+</div>

@@ -1,0 +1,102 @@
+body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color: 0.3s; }
+.code-font { font-family: 'JetBrains Mono', monospace; }
+
+.dark-mode { background-color: #0d1117; color: #e6edf3; }
+.dark-mode .card-surface { background-color: #161b22; border-color: #30363d; }
+.dark-mode .input-bg { background-color: #0d1117; border-color: #30363d; color: white; }
+
+.light-mode { background-color: #f6f8fa; color: #1f2328; }
+.light-mode .card-surface { background-color: #ffffff; border-color: #d0d7de; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.light-mode .input-bg { background-color: #f6f8fa; border-color: #d0d7de; color: #1f2328; }
+.light-mode nav { background-color: rgba(255,255,255,0.95); border-color: #d0d7de; }
+.light-mode .text-gray-400 { color: #656d76; }
+.light-mode .text-white { color: #1f2328; }
+.light-mode footer { background-color: #ffffff; border-top: 1px solid #d0d7de; }
+.light-mode .terminal-window { border: 1px solid #d0d7de; background: #f6f8fa; }
+
+.nav-link { position: relative; }
+.nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: #3fb950; transition: width 0.3s ease; }
+.nav-link:hover::after { width: 100%; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #0d1117; }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+select, input { transition: all 0.2s; }
+select:focus, input:focus { outline: none; border-color: #58a6ff !important; box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3); }
+
+.category-btn { transition: all 0.2s; }
+.category-btn.active { background: linear-gradient(135deg, #238636 0%, #2ea043 100%); color: white; border-color: transparent; }
+
+.code-modal { animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+.hljs { background: #0d1117 !important; padding: 1rem !important; border-radius: 0.5rem; }
+
+.security-badge { font-size: 0.65rem; padding: 2px 8px; border-radius: 9999px; }
+.security-safe { background: rgba(63, 185, 80, 0.2); color: #3fb950; border: 1px solid rgba(63, 185, 80, 0.3); }
+.security-warning { background: rgba(210, 153, 34, 0.2); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.3); }
+.security-danger { background: rgba(248, 81, 73, 0.2); color: #f85149; border: 1px solid rgba(248, 81, 73, 0.3); }
+
+.script-card { transition: all 0.3s ease; }
+.script-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+
+.tag-btn { transition: all 0.2s; font-size: 0.75rem; }
+.tag-btn:hover { background: rgba(88, 166, 255, 0.2); }
+.tag-btn.active { background: rgba(88, 166, 255, 0.3); color: #58a6ff; }
+
+.detail-section { border-left: 3px solid #30363d; padding-left: 1rem; }
+.faq-item { border-bottom: 1px solid #30363d; }
+.faq-item:last-child { border-bottom: none; }
+.stats-card { background: linear-gradient(135deg, rgba(63, 185, 80, 0.1) 0%, rgba(88, 166, 255, 0.1) 100%); }
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #3fb950 0%, #58a6ff 50%, #a371f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(3rem);
+  pointer-events: none;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
