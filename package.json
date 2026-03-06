@@ -1,0 +1,39 @@
+{
+  "name": "autobat",
+  "version": "3.0.0",
+  "description": "Windows 批处理脚本专业下载中心 - 45+ 精选批处理脚本，支持在线预览和一键下载",
+  "main": "js/app.js",
+  "type": "module",
+  "scripts": {
+    "start": "python -m http.server 8080",
+    "serve": "npx serve .",
+    "test": "echo \"No tests configured yet\"",
+    "lint": "echo \"No linter configured yet\""
+  },
+  "keywords": [
+    "windows",
+    "batch",
+    "script",
+    "bat",
+    "cmd",
+    "automation",
+    "system-tools",
+    "utilities",
+    "chinese"
+  ],
+  "author": "AutoBat Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/autobat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/autobat/issues"
+  },
+  "homepage": "https://yourusername.github.io/autobat",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

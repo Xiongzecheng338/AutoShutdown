@@ -1,0 +1,17 @@
+name: AutoBat
+title: AutoBat - Windows 批处理脚本专业下载中心
+description: 45+ 精选 Windows 批处理脚本，支持在线预览、一键下载，包含系统管理、文件操作、网络工具、游戏模块等
+tags:
+  - windows
+  - batch-script
+  - cmd
+  - automation
+  - utilities
+  - system-tools
+  - games
+  - chinese
+version: 3.0.0
+license: MIT
+author: AutoBat Team
+repository: https://github.com/yourusername/autobat
+website: https://yourusername.github.io/autobat

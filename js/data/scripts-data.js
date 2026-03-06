@@ -1,4 +1,4 @@
-const scriptsData = [
+export const scriptsData = [
   {
     id: 1, name: "定时关机助手", category: "系统管理", icon: "fa-power-off", iconColor: "terminal-red",
     security: "safe", tags: ["关机", "定时", "自动化"],
@@ -550,7 +550,7 @@ if not exist "%target%" md "%target%"
 
 echo.
 echo 正在复制 %ext% 文件...
-copy "%source%\%ext%" "%target%\" /y
+copy "%source%\\%ext%" "%target%\\" /y
 
 echo.
 echo 复制完成！
@@ -624,7 +624,7 @@ echo.
 echo 搜索结果:
 echo ========================================
 
-findstr /s /i /n "%keyword%" "%path%\%ext%"
+findstr /s /i /n "%keyword%" "%path%\\%ext%"
 
 echo ========================================
 echo 搜索完成！
@@ -853,7 +853,7 @@ echo.
 pause
 
 echo 正在清理系统临时文件...
-del /q /f /s "%TEMP%\*" 2>nul
+del /q /f /s "%TEMP%\\*" 2>nul
 del /q /f /s "C:\\Windows\\Temp\\*" 2>nul
 
 echo 正在清理系统缓存...
@@ -891,9 +891,9 @@ echo ========================================
 echo.
 
 for %%d in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
-    if exist %%d:\ (
+    if exist %%d:\\ (
         echo [%%d: 盘]
-        for /f "tokens=3" %%a in ('dir %%d:\ /-c ^| find "可用字节"') do echo     可用空间: %%a 字节
+        for /f "tokens=3" %%a in ('dir %%d:\\ /-c ^| find "可用字节"') do echo     可用空间: %%a 字节
         for /f "tokens=3" %%a in ('wmic logicaldisk where "DeviceID='%%d:'" get Size /value ^| find "Size"') do echo     总空间: %%a 字节
         echo.
     )
@@ -1922,26 +1922,20 @@ goto MENU`
   }
 ];
 
-const categories = [...new Set(scriptsData.map(s => s.category))];
-const allTags = [...new Set(scriptsData.flatMap(s => s.tags))];
+export const categories = [...new Set(scriptsData.map(s => s.category))];
+export const allTags = [...new Set(scriptsData.flatMap(s => s.tags))];
 
-let currentCategory = 'all';
-let currentTag = null;
-let currentModalScript = null;
-
-const faqData = [
-  { q: "为什么运行后闪退或没有反应？", a: "部分脚本需要管理员权限。请右键点击脚本文件，选择'以管理员身份运行'。另外，某些杀毒软件可能会阻止脚本运行，请检查杀毒软件设置。" },
-  { q: "如何查看脚本是否安全？", a: "点击'查看代码'按钮可以查看完整源代码。所有代码都是透明的，您可以确认没有恶意操作后再执行。" },
-  { q: "脚本支持哪些Windows版本？", a: "大部分脚本兼容 Windows 7/8/10/11 以及 Windows Server 版本。部分功能可能需要特定版本支持。" },
-  { q: "如何取消已设置的定时任务？", a: "可以使用'定时任务管理'工具查看和删除已创建的计划任务，或者在命令行运行 'schtasks /delete /tn 任务名 /f'。" },
-  { q: "脚本执行后如何恢复？", a: "建议在执行前创建系统还原点或备份重要数据。对于修改系统设置的脚本，可以使用系统还原功能恢复。" },
-  { q: "如何自定义脚本？", a: "下载脚本后，右键选择'编辑'可以用记事本打开修改。建议修改前先备份原脚本。" },
-  { q: "脚本可以用于商业用途吗？", a: "所有脚本均为开源免费，可用于个人和商业用途。但请确保遵守相关法律法规。" },
-  { q: "遇到问题如何反馈？", a: "可以在GitHub上提交Issue，或通过网站联系方式反馈问题。我们会尽快处理。" }
-];
-
-const categoryIcons = {
-  '系统管理': 'fa-cog', '文件操作': 'fa-folder', '网络工具': 'fa-network-wired',
-  '系统优化': 'fa-tachometer-alt', '安全工具': 'fa-shield-alt', '备份恢复': 'fa-database',
-  '开发工具': 'fa-code', '多媒体工具': 'fa-photo-video'
+export const getScriptById = (id) => scriptsData.find(s => s.id === id);
+export const getScriptsByCategory = (category) => scriptsData.filter(s => s.category === category);
+export const getScriptsByTag = (tag) => scriptsData.filter(s => s.tags.includes(tag));
+export const searchScripts = (query) => {
+  const q = query.toLowerCase();
+  return scriptsData.filter(s => 
+    s.name.toLowerCase().includes(q) ||
+    s.description.toLowerCase().includes(q) ||
+    s.category.toLowerCase().includes(q) ||
+    s.tags.some(t => t.toLowerCase().includes(q))
+  );
 };
+
+export default scriptsData;
